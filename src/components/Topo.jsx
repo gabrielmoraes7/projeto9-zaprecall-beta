@@ -4,25 +4,28 @@ import styled from 'styled-components';
 export default function Topo(){
     return(
         <Container>
-            <Logo src={logo}alt="L" />
+            <Logo src={logo}alt="Logo" />
             <Title>ZapRecall</Title>
         </Container>
     );
 }
 
 const Container = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: center
+ display: flex;
+ flex-direction: row;
+ align-items: center;
+ justify-content:center;
 `;
+
 const Logo = styled.img`
-    margin-top: 50px;
-    width: 52px;
-    height: 60px;
-  
+ width: 50px;
+ height: 50px;
 `;
 
 const Title = styled.h1`
+    width: 203.17px;
+    height: 44px;
+
     margin-top: 50px;
     font-family: 'Righteous';
     font-style: normal;

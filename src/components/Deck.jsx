@@ -14,7 +14,7 @@ export default function Deck(props){
                                 card={cartao}
                                 selected={selected}
                                 setSelected={setSelected}
-                                index={index}
+                                cardIndex={index}
                             />
                         )
                     )
@@ -25,7 +25,8 @@ export default function Deck(props){
 }
 
 const DeckWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+display: flex;
+flex-direction: column;
+align-items: center;
+margin-bottom: 70px; 
 `;
