@@ -15,11 +15,13 @@ const Container = styled.div`
  flex-direction: row;
  align-items: center;
  justify-content:center;
+ height:200px
 `;
 
 const Logo = styled.img`
  width: 50px;
  height: 50px;
+ margin:10 px
 `;
 
 const Title = styled.h1`
@@ -34,4 +36,5 @@ const Title = styled.h1`
     line-height: 45px;
     letter-spacing: -0.012em;
     color: #FFFFFF;
+    margin:10px
 `;

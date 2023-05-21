@@ -4,6 +4,7 @@ import Topo from './components/Topo';
 import CARTOES from './mock';
 import { useState } from 'react';
 import ListaIcon from './components/ListaIcon';
+import HomePage from './components/HomePage';
 
 function App() {
   const [selected, setSelected] = useState([]);
@@ -12,42 +13,50 @@ function App() {
   const [resultText, setResultText] = useState('Issae');
   const [resultResp, setResultResp] = useState('noix');
   const [resultEmoji, setResultEmoji] = useState();
-
+  const [showHome, setShowHome] = useState(true);
  return (
-  <AppWrapper>
-    <Topo/>
-    <Deck cartoes={CARTOES} 
-          selected={selected} 
-          setSelected={setSelected} 
-          resultHeight={resultHeight} 
-          setResultHeight={setResultHeight} 
-          setShowResp={setShowResp} 
-          setResultText={setResultText}
-          setResultResp={setResultResp}
-          setResultEmoji={setResultEmoji}
-          />
-    
-    <Result resultHeight={resultHeight}>
-      {showResp && (
-        <>
-          <ResultEmoji>
-            <img src={resultEmoji} alt="icon"/>
-            <strong>{resultResp}</strong>
-          </ResultEmoji>
-          <ResultResp>
-            <p>{resultText}</p>
-          </ResultResp>    
-        </>
-      )}
-      <ResultText>
-        <p>Resultado {selected.length}/{CARTOES.length}</p>
-      </ResultText>
+<>
+  {showHome ? (
+      <HomePage setShowHome={setShowHome}/>
+ ) : (
 
-      <ResultIcons>
-        <ListaIcon selected={selected} />
-      </ResultIcons>
-    </Result>
-  </AppWrapper>
+    <AppWrapper>
+      <Topo/>
+      <Deck cartoes={CARTOES} 
+            selected={selected} 
+            setSelected={setSelected} 
+            resultHeight={resultHeight} 
+            setResultHeight={setResultHeight} 
+            setShowResp={setShowResp} 
+            setResultText={setResultText}
+            setResultResp={setResultResp}
+            setResultEmoji={setResultEmoji}
+            />
+      
+      <Result resultHeight={resultHeight}>
+        {showResp && (
+          <>
+            <ResultEmoji>
+              <img src={resultEmoji} alt="icon"/>
+              <strong>{resultResp}</strong>
+            </ResultEmoji>
+            <ResultResp>
+              <p>{resultText}</p>
+            </ResultResp>    
+          </>
+        )}
+        <ResultText>
+          <p>Resultado {selected.length}/{CARTOES.length}</p>
+        </ResultText>
+
+        <ResultIcons>
+          <ListaIcon selected={selected} />
+        </ResultIcons>
+      </Result>
+    </AppWrapper>
+
+  )}
+  </>
 );
 }
 
