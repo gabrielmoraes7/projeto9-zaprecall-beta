@@ -1,34 +1,82 @@
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 import { useState } from 'react';
 
 export default function MontaCards(props){
-  const [color, setColor] = useState('#FFFFFF');
-  const [borderColor, setBorderColor] = useState('transparent');
-  const [textColor, setTextColor] = useState('black');
-  const [cardSize, setCardSize] = useState('65px');
-  const [flexDirection, setFlexDirection] = useState('row');
-  const [showText, setShowText] = useState(false);
-  const [showButtons, setShowButtons] = useState(false);
-  const [showAnswer, setShowAnswer] = useState(false);
-  const [iconName, setIconName] = useState(null);
+  const [color, setColor] = useState('#FFFFFF');                    //setta o estado que é usado para definir o background do card
+  const [borderColor, setBorderColor] = useState('transparent');    //setta a borda do card
+  const [textColor, setTextColor] = useState('black');              //setta a cor do texto
+  const [cardSize, setCardSize] = useState('65px');                 //muda o tamanho do card
+  const [flexDirection, setFlexDirection] = useState('row');        //altera a direção em que o card é disposto 
+  const [showText, setShowText] = useState(false);                  //exibição do texto da pergunta
+  const [showButtons, setShowButtons] = useState(false);            //mostra os botões de resposta
+  const [showAnswer, setShowAnswer] = useState(false);              //mostra a resposta
+  const [iconName, setIconName] = useState(null);                   //passa o nome do icone usado dependendo da resposta dada
+  const [showTurnCard, setShowTurnCard] = useState(false);
   const {texto} = props.card;
-  const {cardIndex, selected, setSelected} = props;
+  const [currentText, setCurrentText] = useState(texto);
+  const { cartoes, 
+          cardIndex, 
+          selected, 
+          setSelected, 
+          setResultHeight, 
+          setShowResp, 
+          setResultText,
+          setResultResp,
+          setResultEmoji} = props;
   
-  function handleClick(){
-  setColor('#FFFFD5');
-  setCardSize('300px');
-  setFlexDirection('column');
+  function verificaIcone(selected) {
+    return selected.some(item => item.iconName === 'close-circle');
+  }
+  
+  // Chame a função aqui para verificar se algum item do array selected contém o atributo iconName com o valor 'close-circle'
+  const temCloseCircle = verificaIcone(selected);
+  
+  function nameResult(){
+    if(temCloseCircle == true){
+      setResultText('Ainda faltam alguns... Mas não desanime!');
+      setResultResp('Putz...');
+      setResultEmoji('../assets/sad.png');
+    }
 
-  setShowText(true);
-  setShowButtons(false);
-  setShowAnswer(false);
+    if(temCloseCircle != true){
+      setResultText('Você não esqueceu de nenhum flashcard');
+      setResultResp('Parabéns!');
+      setResultEmoji('../assets/party.png');
+    }
+  }
+  //console.log(cartoes);
+  //console.log(selected);
+
+  function finishQuest(){
+    console.log(selected.length);
+    console.log(cartoes.length);
+    if(cartoes.length === (selected.length +1)){
+      setResultHeight('170px');
+      setShowResp(true);
+      nameResult();
+    }
+  }
+
+  //função do click ao se selecionar um card
+  function handleClick(){
+    setColor('#FFFFD5');
+    setCardSize('300px');
+    setFlexDirection('column');
+
+    setShowText(true);
+    setShowButtons(false);
+    setShowAnswer(false);
   }
  
+  //função que mostra a resposta e os botões ao virar a flashcard
   function handleReloadClick() {
-  setShowAnswer(true);
-  setShowButtons(true);
+    setShowTurnCard(true);          //resposta
+    setShowButtons(true);         //botão
+    setCurrentText(props.card.resposta);
   }
  
+  //Aqui temos as 3 funções responsaveis pelas 3 respostas possiveis ao flashcard, que cada uma altera a configuração inicial do card depedendo de qual foi escolhida 
+  //Aqui o erro
   function handleWrongClick() {
     setColor('#FFFFFF');
     
@@ -37,11 +85,14 @@ export default function MontaCards(props){
     setBorderColor('red');
     setTextColor('red');
     setIconName('close-circle');
-    setSelected([...selected, {iconName: 'close-circle', iconColor: 'red'}]);
-    
-  setShowButtons(false);
+    const newSelected = [...selected, {iconName: 'close-circle', iconColor: 'red'}];
+    setSelected(newSelected);
+    finishQuest(newSelected)
+    setShowButtons(false);
+    console.log(newSelected);
+    setShowAnswer(true);
     }
-   
+   //Aqui um acerto 
     function handleRightClick() {
     setColor('#FFFFFF');
     setCardSize('65px');
@@ -49,11 +100,14 @@ export default function MontaCards(props){
     setBorderColor('yellow');
     setTextColor('yellow');
     setIconName('alert-circle');
-    setSelected([...selected, {iconName: 'alert-circle', iconColor: 'yellow'}]);
-    
-  setShowButtons(false);
+    const newSelected = [...selected, {iconName: 'alert-circle', iconColor: 'yellow'}];
+    setSelected(newSelected);
+    finishQuest(newSelected); 
+    setShowAnswer(true);
+    setShowButtons(false);
+    console.log(newSelected);
     }
-   
+   //aqui o Zap
     function handleZapClick() {
     setColor('#FFFFFF');
     setCardSize('65px');
@@ -61,49 +115,58 @@ export default function MontaCards(props){
     setBorderColor('green');
     setTextColor('green');
     setIconName('checkmark-circle');
-    setSelected([...selected, {iconName: 'checkmark-circle', iconColor: 'green'}]);
-    
-  setShowButtons(false);
+    const newSelected = [...selected, {iconName: 'checkmark-circle', iconColor: 'green'}];
+    setSelected(newSelected);
+    finishQuest(newSelected);
+    setShowAnswer(true);
+    setShowButtons(false);
+    console.log(newSelected);
+    }
+
+    //testando pq do :hover nn estar acionando quando o mouse passa por ele, apararentemente algo está impedindo o reconhecimento do evento do mouse
+    function handleMouseEnter() {
+      console.log('Mouse entered Cartao');
     }
   
+  //return com a estrutura individual do card para ser exibida no Map do Deck 
+  //o ternario alí presente muda após o click inicial de mostrar o flashcard dá estrutura inicial para as de pergunta e resposta dependendo do estado de showText que é alterado pelos buttons 
   return(
-  <>
-  <Cartao color={color} borderColor={borderColor} cardSize={cardSize} flexDirection={flexDirection}> 
-  {showText ? (
-  <>
-  <UpperDiv>
-  <CardText textColor={textColor}>{showAnswer ? `Pergunta ${cardIndex + 1}` : texto}</CardText>
-  </UpperDiv>
-  <LowerDiv>
-  {showButtons && (
-  <ButtonsContainer>
-  <WrongButton onClick={handleWrongClick}><p>Não Lembrei</p></WrongButton>
-  <RightButton onClick={handleRightClick}><p>Quase Errei</p></RightButton>
-  <ZapButton onClick={handleZapClick}><p>ZAP!</p></ZapButton>
-  </ButtonsContainer>
-  )}
-  {!showAnswer && (
-  <Botao onClick={handleReloadClick}>
-  <ion-icon name="reload-outline"></ion-icon>
-  </Botao> 
-  )}
-  {iconName && (
-  <Botao>
-  <ion-icon name={iconName} style={{color: borderColor}}></ion-icon>
-  </Botao> 
-  )}
-  </LowerDiv>
-  </>
-  ) : (
-  <>
-  <InicialText>Pergunta {cardIndex + 1}</InicialText>
-  <Botao onClick={handleClick}>
-  <ion-icon name="play-outline"></ion-icon>
-  </Botao> 
-  </>
-  )}
+  <Cartao handleMouseEnter={handleMouseEnter} hoverEnabled={!showText} color={color} borderColor={borderColor} cardSize={cardSize} flexDirection={flexDirection}> 
+    {showText ? (
+      <>
+        <UpperDiv>
+          <CardText textColor={textColor} >{showAnswer ? `Pergunta ${cardIndex + 1}` : currentText}</CardText>
+        </UpperDiv>
+        
+        <LowerDiv>
+          {showButtons && (
+          <ButtonsContainer>
+          <WrongButton onClick={handleWrongClick}><p>Não Lembrei</p></WrongButton>
+          <RightButton onClick={handleRightClick}><p>Quase Errei</p></RightButton>
+          <ZapButton onClick={handleZapClick}><p>ZAP!</p></ZapButton>
+          </ButtonsContainer>
+          )}
+          {!showTurnCard && (
+          <Botao onClick={handleReloadClick}>
+          <ion-icon name="reload-outline"></ion-icon>
+          </Botao> 
+          )}
+          {iconName && (
+          <Botao>
+          <ion-icon name={iconName} style={{color: borderColor}}></ion-icon>
+          </Botao> 
+          )}
+        </LowerDiv>
+      </>
+    ) : (
+    <>
+    <InicialText>Pergunta {cardIndex + 1}</InicialText>
+    <Botao onClick={handleClick}>
+    <ion-icon name="play-outline"></ion-icon>
+    </Botao> 
+    </>
+    )}
   </Cartao>
-  </>
   );
  }
  
@@ -131,6 +194,12 @@ export default function MontaCards(props){
   box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.15);
   border-radius: 5px;
   margin-bottom: 25px;
+
+  ${props => props.hoverEnabled && css`
+    &:hover {
+      border: 2px solid purple;
+    }
+  `}
  `;
  
  const CardText = styled.p`
@@ -141,8 +210,6 @@ export default function MontaCards(props){
   font-weight: 400;
   font-size: 18px;
   line-height: 22px;
-
-  color: #333333;
   `;
  
  const UpperDiv = styled.div`

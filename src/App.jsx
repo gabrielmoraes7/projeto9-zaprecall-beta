@@ -7,13 +7,38 @@ import ListaIcon from './components/ListaIcon';
 
 function App() {
   const [selected, setSelected] = useState([]);
+  const [showResp, setShowResp] = useState(false);
+  const [resultHeight, setResultHeight] = useState('80px');
+  const [resultText, setResultText] = useState('Issae');
+  const [resultResp, setResultResp] = useState('noix');
+  const [resultEmoji, setResultEmoji] = useState();
 
  return (
   <AppWrapper>
     <Topo/>
-    <Deck cartoes={CARTOES} selected={selected} setSelected={setSelected}/>
+    <Deck cartoes={CARTOES} 
+          selected={selected} 
+          setSelected={setSelected} 
+          resultHeight={resultHeight} 
+          setResultHeight={setResultHeight} 
+          setShowResp={setShowResp} 
+          setResultText={setResultText}
+          setResultResp={setResultResp}
+          setResultEmoji={setResultEmoji}
+          />
     
-    <Result>
+    <Result resultHeight={resultHeight}>
+      {showResp && (
+        <>
+          <ResultEmoji>
+            <img src={resultEmoji} alt="icon"/>
+            <strong>{resultResp}</strong>
+          </ResultEmoji>
+          <ResultResp>
+            <p>{resultText}</p>
+          </ResultResp>    
+        </>
+      )}
       <ResultText>
         <p>Resultado {selected.length}/{CARTOES.length}</p>
       </ResultText>
@@ -26,6 +51,22 @@ function App() {
 );
 }
 
+const ResultEmoji = styled.div`
+`;
+
+const ResultResp = styled.div`
+p{
+  font-family: 'Recursive';
+font-style: normal;
+font-weight: 400;
+font-size: 18px;
+line-height: 22px;
+text-align: center;
+
+color: #333333;
+
+}
+`;
 const ResultText = styled.div`
 
 `;
@@ -53,7 +94,7 @@ const Result = styled.div`
   background: #FFFFFF;
   bottom: 0;
   width: 375px;
-  height: 70px;
+  height: ${props => props.resultHeight};
 
   
 box-shadow: 0px -4px 6px rgba(0, 0, 0, 0.05);
