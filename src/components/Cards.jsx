@@ -131,37 +131,45 @@ export default function MontaCards(props){
   //return com a estrutura individual do card para ser exibida no Map do Deck 
   //o ternario alí presente muda após o click inicial de mostrar o flashcard dá estrutura inicial para as de pergunta e resposta dependendo do estado de showText que é alterado pelos buttons 
   return(
-  <Cartao handleMouseEnter={handleMouseEnter} hoverEnabled={!showText} color={color} borderColor={borderColor} cardSize={cardSize} flexDirection={flexDirection}> 
+  <Cartao handleMouseEnter={handleMouseEnter} 
+          hoverEnabled={!showText} 
+          color={color} 
+          borderColor={borderColor} 
+          cardSize={cardSize} 
+          flexDirection={flexDirection} 
+          data-test="flashcard"> 
     {showText ? (
       <>
         <UpperDiv>
-          <CardText textColor={textColor} >{showAnswer ? `Pergunta ${cardIndex + 1}` : currentText}</CardText>
+          <CardText textColor={textColor} data-test="flashcard-text" >
+            {showAnswer ? `Pergunta ${cardIndex + 1}` : currentText}
+          </CardText>
         </UpperDiv>
         
         <LowerDiv>
           {showButtons && (
           <ButtonsContainer>
-          <WrongButton onClick={handleWrongClick}><p>Não Lembrei</p></WrongButton>
-          <RightButton onClick={handleRightClick}><p>Quase Errei</p></RightButton>
-          <ZapButton onClick={handleZapClick}><p>ZAP!</p></ZapButton>
+          <WrongButton onClick={handleWrongClick}  data-test="no-btn"><p>Não Lembrei</p></WrongButton>
+          <RightButton onClick={handleRightClick}  data-test="partial-btn"><p>Quase Errei</p></RightButton>
+          <ZapButton onClick={handleZapClick}  data-test="zap-btn"><p>ZAP!</p></ZapButton>
           </ButtonsContainer>
           )}
           {!showTurnCard && (
-          <Botao onClick={handleReloadClick}>
+          <Botao data-test="turn-btn" onClick={handleReloadClick}>
           <ion-icon name="reload-outline"></ion-icon>
           </Botao> 
           )}
           {iconName && (
           <Botao>
-          <ion-icon name={iconName} style={{color: borderColor}}></ion-icon>
+          <ion-icon name={iconName} data-test="no-icon" style={{color: borderColor}}></ion-icon>
           </Botao> 
           )}
         </LowerDiv>
       </>
     ) : (
     <>
-    <InicialText>Pergunta {cardIndex + 1}</InicialText>
-    <Botao onClick={handleClick}>
+    <InicialText data-test="flashcard-text">Pergunta {cardIndex + 1}</InicialText>
+    <Botao data-test="play-btn" onClick={handleClick}>
     <ion-icon name="play-outline"></ion-icon>
     </Botao> 
     </>
@@ -210,6 +218,7 @@ export default function MontaCards(props){
   font-weight: 400;
   font-size: 18px;
   line-height: 22px;
+
   `;
  
  const UpperDiv = styled.div`
@@ -238,7 +247,6 @@ export default function MontaCards(props){
  const ButtonsContainer = styled.div`
   display:flex;
   justify-content:center;
- 
   button{
   margin-right:15px;
  

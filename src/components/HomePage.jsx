@@ -14,7 +14,7 @@ export default function HomePage(props){
         <HomeMenu>
           <HomeLogo src={logo} alt="logo" />
           <HomeText>ZapRecall</HomeText>
-          <HomeButton onClick={startRecall}>
+          <HomeButton onClick={startRecall} data-test="start-btn">
             <p>Iniciar Recall!</p>
           </HomeButton>
         </HomeMenu>

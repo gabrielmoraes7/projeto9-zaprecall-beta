@@ -33,9 +33,9 @@ function App() {
             setResultEmoji={setResultEmoji}
             />
       
-      <Result resultHeight={resultHeight}>
+      <Result resultHeight={resultHeight} >
         {showResp && (
-          <>
+          <div data-test="finish-text">
             <ResultEmoji>
               <img src={resultEmoji} alt="icon"/>
               <strong>{resultResp}</strong>
@@ -43,13 +43,13 @@ function App() {
             <ResultResp>
               <p>{resultText}</p>
             </ResultResp>    
-          </>
+          </div>
         )}
         <ResultText>
           <p>Resultado {selected.length}/{CARTOES.length}</p>
         </ResultText>
 
-        <ResultIcons>
+        <ResultIcons data-test="footer">
           <ListaIcon selected={selected} />
         </ResultIcons>
       </Result>
